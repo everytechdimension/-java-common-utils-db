@@ -1,15 +1,44 @@
 plugins {
     id 'java'
+    id "net.nemerosa.versioning"
     id 'maven-publish'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'common-utils-db',
+                'Implementation-Version': "1.0."+versioning.info.commit,
+                "Implementation-Vendor": System.properties['user.name'],
+                'Built-By'       : System.properties['user.name'],
+                'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                'Build-Revision' : versioning.info.commit,
+                'Created-By'     : "Gradle ${gradle.gradleVersion}",
+                'Main-Class'     : "com.everytechdimension.common.utils.db.Main",
+                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+                'Class-Path'     : "json-20180813.jar common-exceptions-1.0.1c58fd.jar mysql-connector-java-5.1.49.jar HikariCP-java6-2.3.13.jar"
+        )
+    }
+
+    archiveName "common-utils-db-1.0.${versioning.info.commit.substring(0, 6)}.jar"
 }
 
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://maven.pkg.github.com/shakir-fattani"
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 
 group 'com.everytechdimension'
-version '1.0.9'
+version '1.0.1'
 sourceCompatibility = 1.8
 
 publishing {
@@ -23,9 +52,30 @@ publishing {
             }
         }
     }
+    publications {
+        gpr(MavenPublication) {
+            artifactId 'common-utils-db'
+            from(components.java)
+            // Behebt den Fehler mit den dynamischen Versionen von Spring Boot
+            // Fixes the error with dynamic versions when using Spring Boot
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
 }
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
-    // implementation 'org.json:json:20220320'
+    implementation files(fileTree(dir: '../libs', include: [
+            "json-20180813.jar",
+            "mysql-connector-java-5.1.49.jar",
+            "HikariCP-java6-2.3.13.jar",
+            "common-exceptions-1.0.1c58fd.jar"
+    ]))
 }
