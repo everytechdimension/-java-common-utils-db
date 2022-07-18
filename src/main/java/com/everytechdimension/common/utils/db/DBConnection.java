@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DBConnection {
+public class DBConnection implements AutoCloseable {
     private final ReturnConnection rc;
     private boolean isDebuging;
     private Connection connection;
@@ -209,6 +209,7 @@ public class DBConnection {
         }
     }
 
+    @Override
     public void close() {
         try {
             if (!getAutoCommit())
