@@ -56,6 +56,7 @@ public class Logging {
         try {
             FileWriter fw = new FileWriter(fileName, true);
             fw.append(str);
+            System.out.println(str);
             fw.flush();
             fw.close();
         } catch (IOException e) {

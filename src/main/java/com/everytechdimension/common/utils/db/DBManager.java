@@ -106,7 +106,7 @@ public class DBManager implements DBConnection.ReturnConnection {
             if (ds == null) {
                 Logging.out.println("Hikari instance null");
             }
-            return new DBConnection(ds.getConnection(), this, false);
+            return new DBConnection(ds.getConnection(), this, true);
         } catch (SQLException e) {
             throw new DbException("connection", "taking", e);
         }
