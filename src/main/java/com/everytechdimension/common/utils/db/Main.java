@@ -12,9 +12,9 @@ public class Main {
         System.out.println(pack.getImplementationTitle() + ":" + pack.getImplementationVersion() + " by " + pack.getImplementationVendor() + "(" + pack.getName() + ")");
 
         try (DBConnection conn = DBManager.getInstance().getConnection()) {
-            try (ResultSet rs = conn.query("testing connection", "SELECT now() as time FROM SetBranch limit 1")) {
+            try (ResultSet rs = conn.query("testing connection", "SELECT BranchCode FROM SetBranch")) {
                 while (rs.next()) {
-                    System.out.println("time from sql: "+rs.getString("time"));
+                    System.out.println("time from sql: "+rs.getString("BranchCode"));
                 }
             }
         }

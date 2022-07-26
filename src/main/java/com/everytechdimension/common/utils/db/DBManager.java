@@ -17,7 +17,7 @@ public class DBManager implements DBConnection.ReturnConnection {
     private final HikariDataSource ds;
 
     public DBManager(String type, String host, int port, String databaseName, String username, String password) {
-        this("jdbc:" + type + "://" + host + ":" + port + databaseName, username, password);
+        this("jdbc:" + type + "://" + host + ":" + port + databaseName+"?useSSL=false", username, password);
     }
 
     public DBManager(String type, String host, String databaseName, String username, String password) {
